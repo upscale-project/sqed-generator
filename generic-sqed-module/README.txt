@@ -1,2 +1,4 @@
-This directory contains the generic SQED module. We analyze common
-parts of the custom modules in "../custom-sqed-modules/".
+This directory will contain the generic SQED module, and the common submodules
+that are shared across all the different QED implementations.
+
+We analyze common parts of the custom modules in "../custom-sqed-modules/".
