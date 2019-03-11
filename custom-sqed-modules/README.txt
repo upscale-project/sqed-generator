@@ -1,3 +1,5 @@
-This directory contains custom SQED modules for several processor
-designs. The corresponding instruction constraints can be found in
+This directory contains the customized portions of the SQED module for 
+several processor designs. 
+
+The corresponding instruction constraints can be found in 
 "../ISA\ Constraints/".
