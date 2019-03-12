@@ -11,6 +11,14 @@ Notes:
 - would be best to use Python to implement the tool since many people
   use it and it should be portable
 
+  - regular expression library in Python:
+
+    - https://docs.python.org/3/howto/regex.html
+    - https://stackoverflow.com/questions/1921894/grep-and-python
+    - https://stackoverflow.com/questions/47982949/how-to-parse-complex-text-files-using-python
+    - https://docs.python.org/2/library/glob.html	
+
+
 - instruction constraint can be obtained generated from a table in the
   ISA specification document. The designer has to convert the
   information in that table into our input format.
