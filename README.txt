@@ -1,5 +1,26 @@
 This is the SQED standalone module
 
+
+Steps towards a generic module:
+------------------------------
+
+- set up a file format used as input of our tool
+
+- take a present design and represent its ISA constraints in our format
+
+- aim at an early executable version, likely incomplete but something
+  that could be demonstrated. E.g., as a first version, could only
+  generate the instruction constraints module from our file format
+  while still manually construction the other submodules that are part
+  of the QED module. Then we could gradually refine it.
+
+- in the end, it would be nice to show a working demo using our
+  workflow and integrate that with the Ridecore demo that we already
+  have.
+
+- Eventually we want to support also single instruction checking, but
+  this does not have to be included in the very first version.
+
 Notes:
 ------
 
