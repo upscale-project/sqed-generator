@@ -21,6 +21,10 @@ Steps towards a generic module:
 - Eventually we want to support also single instruction checking, but
   this does not have to be included in the very first version.
 
+- as a good test case, should use OpenRISC 1200 as a showcase that our
+  generic module also works with designs where we haven't applied SQED
+  to.
+
 Notes:
 ------
 
