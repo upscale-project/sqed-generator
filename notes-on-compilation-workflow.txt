@@ -1,0 +1,90 @@
+============================================================================
+OPTIONAL APPROACH: COMPILATION OF QED MODULES FROM A GIVEN ISA SPECIFICATION
+============================================================================
+
+This file contains notes from discussions about a possible workflow
+that generates a QED module from a specification of an ISA that is
+provided by the designer.
+
+Compiling QED modules from a given specification is an approach that
+is alternative to directly implementing a generic QED module in
+Verilog. Such generic QED module can be tailored towards a given,
+particular design via parameters that allow to configure instruction
+formats, opcodes etc.
+
+The specification of the ISA is provided in terms of a structured text
+file that defines the different instruction formats, opcodes etc. The
+structured text file is set up by the designer. The goal is to
+automatically generate the Verilog source of the QED module for a
+particular design based on the structured specification file of the
+ISA. Hooking up the generated QED module to the given design hardly
+can be automated (to be checked, however) and will have to done
+manually by the user.
+
+We identified that the QED modules for the different designs we
+currently have (see subdirectory 'custom-sqed-modules') mostly differ
+in the instruction constraints (source files 'inst_constraints.sv')
+while they are otherwise quite similar to each other.
+
+Steps towards a compilation tool chain:
+
+- Set up a structured file format that will be used to specify the ISA
+  of a given design. The specification given in that format will be
+  parsed by our compilation tool.
+
+- Take a present design and represent its ISA constraints in our
+  specification format.
+
+- Aim at an early executable version that likely will be incomplete
+  but something that can be demonstrated and analyzed. E.g., as a
+  first version, could only automatically generate (parts of) the
+  instruction constraints module (source files 'inst_constraints.sv')
+  from our file format while still manually constructing the other
+  submodules that are part of the QED module. Then we could gradually
+  refine the compilation process to also generate the other
+  submodules.
+
+- In the end, it would be nice to show a working demo using our
+  workflow and integrate that with the Ridecore demo that we already
+  have.
+
+- Eventually we want to support also single instruction checking, but
+  this does not have to be included in the very first version.
+
+- As a good test case, we should use OpenRISC 1200 as a showcase that
+  our generic module also works with designs where we haven't yet
+  applied SQED to.
+
+- The compilation tool could be implemented in Python, which is used
+  frequently and should be portable.
+
+- The format of the specification file should abstract design- and
+  ISA-specific properties such as instruction format, operand widths,
+  opcodes etc.
+
+  E.g., in our format, we list the following for every instruction:
+
+  ADD:
+    opcode = ...
+    func3 = ...
+    func7 = ..
+  ...
+
+Notes:
+
+- It should be possible to obtain instruction constraints directly
+  from an ISA specification document (from tables listing the
+  opcodes). The designer has to convert the information in that table
+  into our structured format for the specification file.
+
+- Make memory size a parameter.
+
+- See the 'inst_constraints.sv' files, these depend on the ISA.
+
+- Module 'qed.v': maybe the i_cache will have to be parametrized.
+
+- Note that not all instructions are present in every ISA, e.g. ORBIS
+  has EXT instructions which, e.g., Ridecore has not.
+
+- Module modify_instructions.v: might need to support different
+  numbers of parameters, depending on ISA.

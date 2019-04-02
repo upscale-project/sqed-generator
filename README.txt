@@ -1,73 +1,55 @@
-This is the SQED standalone module
+This repository contains material related to our planned generic SQED
+module.
 
+Based on discussions, we envision two possible ways to implement a
+generic QED module:
 
-Steps towards a generic module:
-------------------------------
+1.) A generic implementation in Verilog that can is parameterized by
+    design specific properties such instruction format, opcodes,
+    instruction types, etc.
 
-- set up a file format used as input of our tool
+2.) A compilation approach where the designer specifies the ISA of the
+    given design in a predefined, structured format that we
+    formulate. We implement a tool that parses the specification file
+    provided by the designer in our format and automatically generates
+    the Verilog sources of the QED module of the given design.
 
-- take a present design and represent its ISA constraints in our format
+    File 'notes-on-compilation-workflow.txt' contains some notes on
+    that approach.
 
-- aim at an early executable version, likely incomplete but something
-  that could be demonstrated. E.g., as a first version, could only
-  generate the instruction constraints module from our file format
-  while still manually construction the other submodules that are part
-  of the QED module. Then we could gradually refine it.
+The difference between these two approaches is that the
+parameterization if either reflected directly in Verilog (1.) or in
+the specification file from which customized Verilog sources are
+generated (2.).
 
-- in the end, it would be nice to show a working demo using our
-  workflow and integrate that with the Ridecore demo that we already
-  have.
+Either of the above variants should result in a generic QED module
+that is easily customizable.
 
-- Eventually we want to support also single instruction checking, but
-  this does not have to be included in the very first version.
+---------------------------
+Organization of repository:
+---------------------------
 
-- as a good test case, should use OpenRISC 1200 as a showcase that our
-  generic module also works with designs where we haven't applied SQED
-  to.
+Directory 'custom-sqed-modules':
 
-Notes:
-------
+A collection of QED modules (Verilog sources) that we already
+have. These modules are custom for particular designs.
 
-- ultimate goal: implement a tool which takes as input an ISA
-  specification provided by the user. That specification file defines
-  the instruction format, opcodes, etc. Given that specification, our
-  tool automatically generates the Verilog files of the QED module.
+Directory 'generic-sqed-modules':
 
-- would be best to use Python to implement the tool since many people
-  use it and it should be portable
+Verilog sources of the generic QED module will be put here.
 
-  - regular expression library in Python:
+Directory 'doc':
 
-    - https://docs.python.org/3/howto/regex.html
-    - https://stackoverflow.com/questions/1921894/grep-and-python
-    - https://stackoverflow.com/questions/47982949/how-to-parse-complex-text-files-using-python
-    - https://docs.python.org/2/library/glob.html	
+A collection of ISA specification documents that we will need to
+formulate the generic QED module
 
+Directory 'isa-constraints':
 
-- instruction constraints can be obtained from a table in the
-  ISA specification document. The designer has to convert the
-  information in that table into our specified input format.
+Instruction constraints files of the custom QED modules we have
+collected.
 
-- we might want to abstract the fields of the instruction layout
-  (opcode, func7, func3,...) as this is ISA dependent
+Directory 'isa-input-templates':
 
-- our format e.g.: list the following for every instruction:
-
-  ADD:
-    opcode = ...
-    func3 = ...
-    func7 = ..
-  ...
-
-- make memory size and instruction format a parameter
-
-- see 'inst_constraints' files, these depend on the ISA
-
-- module qed.v: maybe the i_cache will have to be parametrized
-
-- not all instructions are present in every ISA, e.g. ORBIS has EXT
-  instructions which e.g. Ridecore has not
-
-- module modify_instructions.v: might need different numbers of
-  parameters, depending on ISA
+Structured specification file format (only relevant if we go for
+variant 2. above).
 
