@@ -25,6 +25,13 @@ generated (2.).
 Either of the above variants should result in a generic QED module
 that is easily customizable.
 
+Update 2 April 2019:
+
+We want to eventually combine approaches 1.) and 2.), where the
+generic QED module is set up following approach 1.) and design
+specific submodules that have to be hooked up to the generic module
+are automatically generated from a specification file by approach 2.).
+
 ---------------------------
 Organization of repository:
 ---------------------------
