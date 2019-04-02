@@ -44,14 +44,14 @@ Notes:
     - https://docs.python.org/2/library/glob.html	
 
 
-- instruction constraint can be obtained generated from a table in the
+- instruction constraints can be obtained from a table in the
   ISA specification document. The designer has to convert the
-  information in that table into our input format.
+  information in that table into our specified input format.
 
 - we might want to abstract the fields of the instruction layout
   (opcode, func7, func3,...) as this is ISA dependent
 
-- our format e.g.: list the following for every instruction
+- our format e.g.: list the following for every instruction:
 
   ADD:
     opcode = ...
@@ -59,7 +59,7 @@ Notes:
     func7 = ..
   ...
 
-- make memory size a parameter
+- make memory size and instruction format a parameter
 
 - see 'inst_constraints' files, these depend on the ISA
 
