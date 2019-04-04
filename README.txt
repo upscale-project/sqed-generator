@@ -25,6 +25,17 @@ generated (2.).
 Either of the above variants should result in a generic QED module
 that is easily customizable.
 
+Update 4 April 2019:
+
+We need to make sure that the implementation of the generic module
+uses standard Verilog that can be handled by the Yosys tool (we use
+Yosys also in our model checker CoSA):
+
+http://www.clifford.at/yosys/
+
+The instruction constraints files ('inst_constraint.sv') contain some
+basic SystemVerilog assertions.
+
 Update 2 April 2019:
 
 We want to eventually combine approaches 1.) and 2.), where the
@@ -60,3 +71,6 @@ Directory 'isa-input-templates':
 Structured specification file format (only relevant if we go for
 variant 2. above).
 
+Directory 'materials':
+
+Contains various material related to SQED such as slides etc.
