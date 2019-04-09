@@ -1,3 +1,18 @@
+-------
+License
+-------
+
+TBA.
+
+TODO: We must make sure to include the official SQED license for the
+generic module. However, for single instruction checking we want to
+use a BSD license since that should not be depending on any code we
+develop for SQED.
+
+-------------------
+General information
+-------------------
+
 This repository contains material related to our planned generic SQED
 module.
 
