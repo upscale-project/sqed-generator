@@ -42,6 +42,9 @@ that is easily customizable.
 
 Update 12 April 2019:
 
+TODO: in the end, we need a licensing policy similar to the the SQED
+demo for ridecore, where the SQED module has a special license.
+
 We plan to integrate a submodule for generic single instruction
 checking. In a related project, we are working on single instruction
 checking for RIDECORE (RISC-V). However, RIDECORE does not implement

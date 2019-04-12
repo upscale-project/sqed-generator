@@ -35,6 +35,8 @@ Steps towards a compilation tool chain:
 - Take a present design and represent its ISA constraints in our
   specification format.
 
+  TODO: see Caleb's work on an approach to specify ISAs.
+
 - Aim at an early executable version that likely will be incomplete
   but something that can be demonstrated and analyzed. E.g., as a
   first version, could only automatically generate (parts of) the
