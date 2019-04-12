@@ -40,6 +40,17 @@ generated (2.).
 Either of the above variants should result in a generic QED module
 that is easily customizable.
 
+Update 12 April 2019:
+
+We plan to integrate a submodule for generic single instruction
+checking. In a related project, we are working on single instruction
+checking for RIDECORE (RISC-V). However, RIDECORE does not implement
+floating-point instructions, and hence we will not have any properties for
+RIDECORE that we could abstract and reuse for the generic
+submodule. However, in the submodule, we should provide generic checks
+for floating-point instructions in order to make our generic module widely
+applicable.
+
 Update 4 April 2019:
 
 We need to make sure that the implementation of the generic module
