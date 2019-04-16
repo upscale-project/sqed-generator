@@ -35,7 +35,22 @@ Steps towards a compilation tool chain:
 - Take a present design and represent its ISA constraints in our
   specification format.
 
-  TODO: see Caleb's work on an approach to specify ISAs.
+  See Caleb's work on an approach to specify ISAs like Peak/Magma in
+  Python:
+
+  https://github.com/phanrahan/magma
+
+  IMPORTANT: we want to avoid Chisel. Although it can generate Verilog,
+  the resulting Verilog sources are difficult to integrate with
+  existing Verilog modules.
+
+- As a first step, we can proceed with setting up generic Verilog
+  sources directly and use a set of (shell) scripts to generate
+  modules for a particular design. This will lead to an early
+  executable version. At the same time, we plan a more structured
+  approach based on a specification language such as Peak/Magma. This
+  is necessary to have an implementation in the end that is easier to
+  maintain and port to other platforms.
 
 - Aim at an early executable version that likely will be incomplete
   but something that can be demonstrated and analyzed. E.g., as a

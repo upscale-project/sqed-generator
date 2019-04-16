@@ -40,6 +40,14 @@ generated (2.).
 Either of the above variants should result in a generic QED module
 that is easily customizable.
 
+Update 15 April 2019:
+
+The submodule for single instruction checking can be kept separate
+from the other ones in the beginning, and its development will also be
+separate. Currently we have single instruction checking only for
+Ridecore. We will apply it to at least one other design first before
+identifying the necessary parts that can be made generic.
+
 Update 12 April 2019:
 
 TODO: in the end, we need a licensing policy similar to the the SQED
