@@ -21,7 +21,7 @@ def module_def(module, name, args, num_spaces=2):
 
 def signal_def(bits, signal_type, signal_name, num_spaces=2):
     if bits == 1:
-        return " "*num_spaces + signal_type + signal_name + ";"
+        return " "*num_spaces + signal_type + " " + signal_name + ";"
     else:
         return " "*num_spaces + signal_type + " [" + str(bits-1) + ":0] " + signal_name + ";"
 
@@ -86,7 +86,7 @@ def _ge(left, right, parens=False):
     return operator(">=", left, right, parens)
 
 def _constant(bits, value):
-    return str(bits) + "'" + value
+    return str(bits) + "'b" + value
 
 def bit_vector(signals):
     vector = "{"
@@ -114,7 +114,7 @@ def inline_conditional(check, true, false):
     return check + " ? " + true + " : " + false
 
 def conditional_header(conditional, expression, num_spaces=2):
-    return return " "*num_spaces + conditional + " (" + expression + ") begin"
+    return " "*num_spaces + conditional + " (" + expression + ") begin"
 
 def if_header(expression, num_spaces=2):
     return conditional_header("if", expression, num_spaces=2)
@@ -125,5 +125,7 @@ def else_if_header(expression, num_spaces=2):
 def else_header(expression, num_spaces=2):
     return conditional_header("else", expression, num_spaces=2)
 
+def signal_index(signal, msb, lsb):
+    return signal + "[" + msb + ":" + lsb + "]"
 
 

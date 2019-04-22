@@ -1,15 +1,15 @@
 num_registers = 32
 
-_funct7: 31, 25
-_funct3: 14, 12
-_rd: 11, 7
-_rs1: 19, 15
-_rs2: 24, 20
-_opcode: 6, 0
-_shamt: 24, 20
-_simm12: 31, 20
-_simm7: 31, 25
-_imm5: 11, 7
+_funct7: 31 25
+_funct3: 14 12
+_rd: 11 7
+_rs1: 19 15
+_rs2: 24 20
+_opcode: 6 0
+_shamt: 24 20
+_simm12: 31 20
+_simm7: 31 25
+_imm5: 11 7
 
 _R
 
