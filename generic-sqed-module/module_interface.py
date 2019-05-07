@@ -10,10 +10,10 @@ def module_def(module, name, args, num_spaces=2):
 
     i = 0
     for arg in args:
-        i += 1
-        module_definition = module_definition + "." + arg + "(" + args[arg] + ")"
-        if i < args_length:
+        module_definition = module_definition + "." + arg + "(" + args[i] + ")"
+        if i < args_length - 1:
             module_definition = module_definition + ",\n" + " "*spaces_so_far
+        i += 1
 
     module_definition = module_definition + ");"
 
@@ -25,26 +25,26 @@ def signal_def(bits, signal_type, signal_name, num_spaces=2):
     else:
         return " "*num_spaces + signal_type + " [" + str(bits-1) + ":0] " + signal_name + ";"
 
-def module_header(name, inputs, outputs, num_spaces=2):
+def module_header(name, inputs, outputs):
     header = "module " + name + " (\n"
 
     if len(outputs) > 0:
-        header = header + " "*num_spaces + "// Outputs\n"
+        header = header + "// Outputs\n"
 
     i = 0
     for out in outputs:
         i += 1
-        header = header + " "*num_spaces + out
+        header = header + out
         if len(inputs) > 0 or i < len(outputs):
             header = header + ",\n"
 
     if len(inputs) > 0:
-        header = header + " "*num_spaces + "// Inputs\n"
+        header = header + "// Inputs\n"
 
     i = 0
     for inp in inputs:
         i += 1
-        header = " "*num_spaces + header + inp
+        header = header + inp
         if i < len(inputs):
             header = header + ",\n"
 
@@ -110,8 +110,11 @@ def begin():
 def end():
     return "end"
 
-def inline_conditional(check, true, false):
-    return check + " ? " + true + " : " + false
+def inline_conditional(check, true, false, endit):
+    inline = check + " ? " + true + " : " + false
+    if endit:
+        inline = inline + ";"
+    return inline
 
 def conditional_header(conditional, expression, num_spaces=2):
     return " "*num_spaces + conditional + " (" + expression + ") begin"

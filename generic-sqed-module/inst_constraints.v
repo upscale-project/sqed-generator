@@ -1,5 +1,5 @@
-    module inst_constraint (
-  // Inputs
+module inst_constraint (
+// Inputs
 clk,
 instruction);
 
