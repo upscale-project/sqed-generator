@@ -40,6 +40,23 @@ generated (2.).
 Either of the above variants should result in a generic QED module
 that is easily customizable.
 
+Update 8 May 2019:
+
+We want to aim at integrating many parameters in our generic module to
+make it as easy as possible for a user to hook up the module to the
+given design. E.g., the QED-ready signal requires to add additional
+logic to the design, which may be difficult for inexperienced
+users. We want to try to implement the necessary logic inside the QED
+module in a generic way.
+
+As next steps, we want to analyze the QED module of RIDECORE to pull
+out as many of the design decisions and simplifiying assumptions as
+possible by introducing parameters, e.g., for the RIDECORE demo we
+disabled branch prediction. These simplifications were made to speed
+up model checking.
+
+We also want to consider other processors eventually.
+
 Update 26 April 2019:
 
 The QED-ready signal depends on the ISA and the pipeline design since
