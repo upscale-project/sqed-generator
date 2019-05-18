@@ -55,6 +55,9 @@ def module_header(name, inputs, outputs):
 def module_footer():
     return "endmodule"
 
+def direct_assignment_def(name, expression, num_spaces=2):
+    return " "*num_spaces + name + " = " + expression + ";"
+
 def assign_def(name, expression, num_spaces=2):
     return " "*num_spaces + "assign " + name + " = " + expression + ";"
 
@@ -104,11 +107,17 @@ def bit_vector(signals):
 def always_def(signal, num_spaces=2):
     return " "*num_spaces + "always @(posedge " + signal + ")"
 
-def begin():
-    return "begin"
+def always_comb_def(num_spaces=2):
+    return " "*num_spaces + "always_comb begin"
 
-def end():
-    return "end"
+def property_def(expression, num_spaces=2):
+    return " "*num_spaces + "assume property " + "(" + expression + ");"
+
+def begin(num_spaces=1):
+    return " "*num_spaces + "begin"
+
+def end(num_spaces=2):
+    return " "*num_spaces + "end"
 
 def inline_conditional(check, true, false, endit):
     inline = check + " ? " + true + " : " + false
@@ -120,15 +129,18 @@ def conditional_header(conditional, expression, num_spaces=2):
     return " "*num_spaces + conditional + " (" + expression + ") begin"
 
 def if_header(expression, num_spaces=2):
-    return conditional_header("if", expression, num_spaces=2)
+    return conditional_header("if", expression, num_spaces=num_spaces)
 
 def else_if_header(expression, num_spaces=2):
-    return conditional_header("else if", expression, num_spaces=2)
+    return conditional_header("else if", expression, num_spaces=num_spaces)
 
-def else_header(expression, num_spaces=2):
-    return conditional_header("else", expression, num_spaces=2)
+def else_header(num_spaces=2):
+    return " "*num_spaces + "else begin"
 
 def signal_index(signal, msb, lsb):
     return signal + "[" + msb + ":" + lsb + "]"
+
+def newline(n):
+    return "\n"*n
 
 
