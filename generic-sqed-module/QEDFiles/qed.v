@@ -1,75 +1,75 @@
 module qed (
 // Outputs
-qed_ifu_instruction,
 vld_out,
+qed_ifu_instruction,
 // Inputs
-ifu_qed_instruction,
-rst,
 ena,
+ifu_qed_instruction,
 clk,
 exec_dup,
-stall_IF);
+stall_IF,
+rst);
 
-  output [31:0] qed_ifu_instruction;
-  output vld_out;
-
+  input ena;
   input [31:0] ifu_qed_instruction;
-  output rst;
-  output ena;
-  output clk;
-  output exec_dup;
-  output stall_IF;
+  input clk;
+  input exec_dup;
+  input stall_IF;
+  input rst;
 
+  output vld_out;
+  output [31:0] qed_ifu_instruction;
   wire [4:0] shamt;
-  wire [11:0] simm12;
+  wire [11:0] imm12;
   wire [4:0] rd;
-  wire [4:0] imm5;
   wire [2:0] funct3;
   wire [6:0] opcode;
+  wire [6:0] imm7;
   wire [6:0] funct7;
-  wire [6:0] simm7;
+  wire [4:0] imm5;
   wire [4:0] rs1;
   wire [4:0] rs2;
 
-  wire is_lw;
-  wire is_sw;
-  wire is_aluimm;
-  wire is_alureg;
+  wire IS_I;
+  wire IS_LW;
+  wire IS_R;
+  wire IS_SW;
 
   wire [31:0] qed_instruction;
   wire [31:0] qic_qimux_instruction;
 
-  qed_decoder dec (.shamt(shamt),
-                   .simm12(simm12),
+  qed_decoder dec (.ifu_qed_instruction(qic_qimux_instruction),
+                   .shamt(shamt),
+                   .imm12(imm12),
                    .rd(rd),
-                   .imm5(imm5),
                    .funct3(funct3),
                    .opcode(opcode),
+                   .imm7(imm7),
                    .funct7(funct7),
-                   .simm7(simm7),
+                   .imm5(imm5),
                    .rs1(rs1),
                    .rs2(rs2),
-                   .is_lw(is_lw),
-                   .is_sw(is_sw),
-                   .is_alureg(is_alureg),
-                   .is_aluimm(is_aluimm));
+                   .IS_I(IS_I),
+                   .IS_LW(IS_LW),
+                   .IS_R(IS_R),
+                   .IS_SW(IS_SW));
 
   modify_instruction minst (.qed_instruction(qed_instruction),
                             .qic_qimux_instruction(qic_qimux_instruction),
                             .shamt(shamt),
-                            .simm12(simm12),
+                            .imm12(imm12),
                             .rd(rd),
-                            .imm5(imm5),
                             .funct3(funct3),
                             .opcode(opcode),
+                            .imm7(imm7),
                             .funct7(funct7),
-                            .simm7(simm7),
+                            .imm5(imm5),
                             .rs1(rs1),
                             .rs2(rs2),
-                            .is_lw(is_lw),
-                            .is_sw(is_sw),
-                            .is_alureg(is_alureg),
-                            .is_aluimm(is_aluimm));
+                            .IS_I(IS_I),
+                            .IS_LW(IS_LW),
+                            .IS_R(IS_R),
+                            .IS_SW(IS_SW));
 
   qed_instruction_mux imux (.qed_ifu_instruction(qed_ifu_instruction),
                             .ifu_qed_instruction(ifu_qed_instruction),
@@ -82,7 +82,7 @@ stall_IF);
                    .clk(clk),
                    .rst(rst),
                    .exec_dup(exec_dup),
-                   .IF_stall(IF_stall),
+                   .IF_stall(stall_IF),
                    .ifu_qed_instruction(ifu_qed_instruction));
 
 endmodule

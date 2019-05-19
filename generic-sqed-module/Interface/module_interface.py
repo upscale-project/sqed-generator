@@ -1,16 +1,17 @@
 
 
-def module_def(module, name, args, num_spaces=2):
+def module_def(module, name, arg_names, arg_signals, num_spaces=2):
     module_definition = " "*num_spaces
     module_definition = module_definition + module + " " + name + " ("
 
     spaces_so_far = len(module_definition)
 
-    args_length = len(args)
+    args_length = len(arg_names)
+    assert(len(arg_names) == len(arg_signals))
 
     i = 0
-    for arg in args:
-        module_definition = module_definition + "." + arg + "(" + args[i] + ")"
+    for arg_name in arg_names:
+        module_definition = module_definition + "." + arg_name + "(" + arg_signals[i] + ")"
         if i < args_length - 1:
             module_definition = module_definition + ",\n" + " "*spaces_so_far
         i += 1

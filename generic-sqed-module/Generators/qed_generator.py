@@ -1,88 +1,121 @@
+import sys
+sys.path.append("../FormatParsers/")
+sys.path.append("../Interface/")
 import format_parser as P
 import module_interface as I
+import copy
 
-bit_codes, instruction_codes = P.parse_format("RV32M-ridecore_format.txt")
+# Verilog file
+verilog = ""
 
-inputs = ["ifu_qed_instruction", "rst", "ena", "clk", "exec_dup", "stall_IF"]
-outputs = ["qed_ifu_instruction", "vld_out"]
+# Parse the input format file
+format_sections, format_dicts = P.parse_format("../FormatFiles/RV32M-ridecore_format.txt")
 
-constraints_file = I.module_header("qed", inputs, outputs)
+# Get ISA information
+isa_info = format_dicts["ISA"]
+# Get instruction types requirements
+ins_reqs = format_dicts["INSREQS"]
+# Get constraints for qed module setup
+qed_constraints = format_dicts["QEDCONSTRAINTS"]
+# Get register names
+registers = format_dicts["REGISTERS"]
+# Get constraints for qed module setup
+qed_constraints = format_dicts["QEDCONSTRAINTS"]
+# Get the instruction fields for each type
+ins_fields = format_dicts["INSFIELDS"]
+# Get the bit fields
+bit_fields = format_dicts["BITFIELDS"]
+# Get all instruction types
+instructions = {}
+for ins in format_dicts["INSTYPES"].keys():
+    if ins != "CONSTRAINT":
+        instructions[ins] = format_dicts[ins]
 
-constraints_file += "\n"
-constraints_file += "\n"
+# Global header for module
+MODULENAME = "qed"
+INPUTS = {"clk": 1, "ifu_qed_instruction": int(isa_info["num_registers"]),
+        "rst": 1, "ena": 1, "exec_dup": 1, "stall_IF": 1}
+OUTPUTS = {"qed_ifu_instruction": int(isa_info["num_registers"]), "vld_out": 1}
 
-constraints_file += I.signal_def(32, "output", "qed_ifu_instruction", num_spaces=2)
-constraints_file += "\n"
-constraints_file += I.signal_def(1, "output", "vld_out", num_spaces=2)
-constraints_file += "\n"
-constraints_file += "\n"
+# Adds module header definition
+verilog += I.module_header(MODULENAME, INPUTS, OUTPUTS)
+verilog += I.newline(2)
 
-constraints_file += I.signal_def(32, "input", "ifu_qed_instruction", num_spaces=2)
-constraints_file += "\n"
+# Instantiate inputs
+for inp in INPUTS:
+    verilog += I.signal_def(INPUTS[inp], "input", inp, num_spaces=2)
+    verilog += I.newline(1)
 
-for inp in inputs[1:]:
-    constraints_file += I.signal_def(1, "output", inp, num_spaces=2)
-    constraints_file += "\n"
+# Instantiate outputs
+verilog += I.newline(1)
+for out in OUTPUTS:
+    verilog += I.signal_def(OUTPUTS[out], "output", out, num_spaces=2)
+    verilog += I.newline(1)
 
-constraints_file += "\n"
+# Instantiate bit fields as wires
+for bit_field in bit_fields:
+    if bit_field != "CONSTRAINT":
+        msb, lsb = bit_fields[bit_field].split()
+        bits = int(msb) - int(lsb) + 1
+        verilog += I.signal_def(bits, "wire", bit_field, num_spaces=2)
+        verilog += I.newline(1)
 
-for bit_code in bit_codes:
-    msb, lsb = bit_codes[bit_code]
-    constraints_file += I.signal_def(int(msb)-int(lsb)+1, "wire", bit_code, num_spaces=2)
-    constraints_file += "\n"
+# Instantiate new instruction types wires
+verilog += I.newline(1)
+for ins_type in ins_reqs:
+    if ins_type != "CONSTRAINT":
+        verilog += I.signal_def(1, "wire", "IS_"+ins_type, num_spaces=2)
+        verilog += I.newline(1)
 
-constraints_file += "\n"
+# Instantiate internal instruction versions
+verilog += I.newline(1)
+verilog += I.signal_def(int(isa_info["num_registers"]), "wire", "qed_instruction", num_spaces=2)
+verilog += I.newline(1)
+verilog += I.signal_def(int(isa_info["num_registers"]), "wire", "qic_qimux_instruction", num_spaces=2)
+verilog += I.newline(2)
 
-constraints_file += I.signal_def(1, "wire", "is_lw", num_spaces=2)
-constraints_file += "\n"
-constraints_file += I.signal_def(1, "wire", "is_sw", num_spaces=2)
-constraints_file += "\n"
-constraints_file += I.signal_def(1, "wire", "is_aluimm", num_spaces=2)
-constraints_file += "\n"
-constraints_file += I.signal_def(1, "wire", "is_alureg", num_spaces=2)
-constraints_file += "\n"
+# Decoder module
+decoder_args = ["qic_qimux_instruction"]
+decoder_args = decoder_args + list(bit_fields.keys())
+decoder_args.remove("CONSTRAINT")
+decoder_args = decoder_args + [("IS_"+key) for key in ins_reqs]
+decoder_args.remove("IS_CONSTRAINT")
+signals = decoder_args
+names = copy.deepcopy(signals)
+names[0] = "ifu_qed_instruction"
+verilog += I.module_def("qed_decoder", "dec", names, signals, num_spaces=2)
+verilog += I.newline(2)
 
-constraints_file += "\n"
+# Modify module
+modify_args = ["qed_instruction", "qic_qimux_instruction"]
+modify_args = modify_args + list(bit_fields.keys())
+modify_args.remove("CONSTRAINT")
+modify_args = modify_args + [("IS_"+key) for key in ins_reqs]
+modify_args.remove("IS_CONSTRAINT")
+signals = modify_args
+names = modify_args
+verilog += I.module_def("modify_instruction", "minst", names, signals, num_spaces=2)
+verilog += I.newline(2)
 
-constraints_file += I.signal_def(32, "wire", "qed_instruction", num_spaces=2)
-constraints_file += "\n"
-constraints_file += I.signal_def(32, "wire", "qic_qimux_instruction", num_spaces=2)
-constraints_file += "\n"
+# Mux module
+mux_args = ["qed_ifu_instruction", "ifu_qed_instruction", "qed_instruction", "exec_dup", "ena"]
+signals = mux_args
+names = mux_args
+verilog += I.module_def("qed_instruction_mux", "imux", names, signals, num_spaces=2)
+verilog += I.newline(2)
 
-constraints_file += "\n"
+# Cache module
+cache_args = ["qic_qimux_instruction", "vld_out", "clk", "rst", "exec_dup", "stall_IF", "ifu_qed_instruction"]
+signals = cache_args
+names = copy.deepcopy(signals)
+names[-2] = "IF_stall"
+verilog += I.module_def("qed_i_cache", "qic", names, signals, num_spaces=2)
+verilog += I.newline(2)
 
-constraints_file += I.module_def("qed_decoder", "dec",
-                                 list(bit_codes.keys())+["is_lw", "is_sw", "is_alureg", "is_aluimm"],
-                                 num_spaces=2)
+verilog += I.module_footer()
 
-constraints_file += "\n"
-constraints_file += "\n"
-
-constraints_file += I.module_def("modify_instruction", "minst",
-                                 ["qed_instruction", "qic_qimux_instruction"]+list(bit_codes.keys())+["is_lw", "is_sw", "is_alureg", "is_aluimm"],
-                                 num_spaces=2)
-
-constraints_file += "\n"
-constraints_file += "\n"
-
-constraints_file += I.module_def("qed_instruction_mux", "imux",
-                                 ["qed_ifu_instruction", "ifu_qed_instruction", "qed_instruction", "exec_dup", "ena"],
-                                 num_spaces=2)
-
-constraints_file += "\n"
-constraints_file += "\n"
-
-constraints_file += I.module_def("qed_i_cache", "qic",
-                                 ["qic_qimux_instruction", "vld_out", "clk", "rst", "exec_dup", "IF_stall", "ifu_qed_instruction"],
-                                 num_spaces=2)
-
-constraints_file += "\n"
-constraints_file += "\n"
-
-constraints_file += I.module_footer()
-
-f = open("qed.v", 'w')
-f.write(constraints_file)
+f = open("../QEDFiles/qed.v", 'w')
+f.write(verilog)
 f.close()
 
 
