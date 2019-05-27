@@ -28,7 +28,7 @@ for ins in format_dicts["INSTYPES"].keys():
 
 # Global header for module
 MODULENAME = "inst_constraint"
-INPUTS = {"clk": 1, "instruction": int(isa_info["num_registers"])}
+INPUTS = {"clk": 1, "instruction": int(isa_info["instruction_length"])}
 OUTPUTS = {}
 
 # Adds module header definition
@@ -86,7 +86,7 @@ for ins_type in instructions:
         fields = ins_fields[ins_type].split()
         for field in fields:
             if field in registers:
-                constraints.append(I._lt(field, str(int(isa_info["num_registers"])/2), parens=True))
+                constraints.append(I._lt(field, str(int(isa_info["instruction_length"])/2), parens=True))
 
     for type_constraint in type_constraints:
         constraints.append(type_constraint)
