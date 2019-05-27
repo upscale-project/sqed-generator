@@ -17,6 +17,7 @@ clk);
   wire [4:0] rs1;
   wire [4:0] rs2;
 
+  wire FORMAT_I;
   wire ALLOWED_I;
   wire ANDI;
   wire SLTIU;
@@ -32,6 +33,7 @@ clk);
   wire ALLOWED_LW;
   wire LW;
 
+  wire FORMAT_R;
   wire ALLOWED_R;
   wire AND;
   wire SLTU;
@@ -67,15 +69,15 @@ clk);
   assign rs2 = instruction[24:20];
 
   assign FORMAT_I = (rs1 < 16) && (rd < 16);
-  assign ANDI = (funct3 == 3'b111) && (opcode == 7'b0010011);
-  assign SLTIU = (funct3 == 3'b011) && (opcode == 7'b0010011);
-  assign SRLI = (funct3 == 3'b101) && (opcode == 7'b0010011) && (funct7 == 7'b0000000);
-  assign SLTI = (funct3 == 3'b010) && (opcode == 7'b0010011);
-  assign SRAI = (funct3 == 3'b101) && (opcode == 7'b0010011) && (funct7 == 7'b0100000);
-  assign SLLI = (funct3 == 3'b001) && (opcode == 7'b0010011) && (funct7 == 7'b0000000);
-  assign ORI = (funct3 == 3'b110) && (opcode == 7'b0010011);
-  assign XORI = (funct3 == 3'b100) && (opcode == 7'b0010011);
-  assign ADDI = (funct3 == 3'b000) && (opcode == 7'b0010011);
+  assign ANDI = FORMAT_I && (funct3 == 3'b111) && (opcode == 7'b0010011);
+  assign SLTIU = FORMAT_I && (funct3 == 3'b011) && (opcode == 7'b0010011);
+  assign SRLI = FORMAT_I && (funct3 == 3'b101) && (opcode == 7'b0010011) && (funct7 == 7'b0000000);
+  assign SLTI = FORMAT_I && (funct3 == 3'b010) && (opcode == 7'b0010011);
+  assign SRAI = FORMAT_I && (funct3 == 3'b101) && (opcode == 7'b0010011) && (funct7 == 7'b0100000);
+  assign SLLI = FORMAT_I && (funct3 == 3'b001) && (opcode == 7'b0010011) && (funct7 == 7'b0000000);
+  assign ORI = FORMAT_I && (funct3 == 3'b110) && (opcode == 7'b0010011);
+  assign XORI = FORMAT_I && (funct3 == 3'b100) && (opcode == 7'b0010011);
+  assign ADDI = FORMAT_I && (funct3 == 3'b000) && (opcode == 7'b0010011);
   assign ALLOWED_I = ANDI || SLTIU || SRLI || SLTI || SRAI || SLLI || ORI || XORI || ADDI;
 
   assign FORMAT_LW = (rs1 < 16) && (rd < 16) && (instruction[31:30] == 00);
@@ -83,27 +85,26 @@ clk);
   assign ALLOWED_LW = LW;
 
   assign FORMAT_R = (rs2 < 16) && (rs1 < 16) && (rd < 16);
-  assign AND = (funct3 == 3'b111) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
-  assign SLTU = (funct3 == 3'b011) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
-  assign MULH = (funct3 == 3'b001) && (opcode == 7'b0110011) && (funct7 == 7'b0000001);
-  assign SRA = (funct3 == 3'b101) && (opcode == 7'b0110011) && (funct7 == 7'b0100000);
-  assign XOR = (funct3 == 3'b100) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
-  assign SUB = (funct3 == 3'b000) && (opcode == 7'b0110011) && (funct7 == 7'b0100000);
-  assign SLT = (funct3 == 3'b010) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
-  assign MULHSU = (funct3 == 3'b010) && (opcode == 7'b0110011) && (funct7 == 7'b0000001);
-  assign MULHU = (funct3 == 3'b011) && (opcode == 7'b0110011) && (funct7 == 7'b0000001);
-  assign SRL = (funct3 == 3'b101) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
-  assign SLL = (funct3 == 3'b001) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
-  assign ADD = (funct3 == 3'b000) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
-  assign MUL = (funct3 == 3'b000) && (opcode == 7'b0110011) && (funct7 == 7'b0000001);
-  assign OR = (funct3 == 3'b110) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
+  assign AND = FORMAT_R && (funct3 == 3'b111) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
+  assign SLTU = FORMAT_R && (funct3 == 3'b011) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
+  assign MULH = FORMAT_R && (funct3 == 3'b001) && (opcode == 7'b0110011) && (funct7 == 7'b0000001);
+  assign SRA = FORMAT_R && (funct3 == 3'b101) && (opcode == 7'b0110011) && (funct7 == 7'b0100000);
+  assign XOR = FORMAT_R && (funct3 == 3'b100) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
+  assign SUB = FORMAT_R && (funct3 == 3'b000) && (opcode == 7'b0110011) && (funct7 == 7'b0100000);
+  assign SLT = FORMAT_R && (funct3 == 3'b010) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
+  assign MULHSU = FORMAT_R && (funct3 == 3'b010) && (opcode == 7'b0110011) && (funct7 == 7'b0000001);
+  assign MULHU = FORMAT_R && (funct3 == 3'b011) && (opcode == 7'b0110011) && (funct7 == 7'b0000001);
+  assign SRL = FORMAT_R && (funct3 == 3'b101) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
+  assign SLL = FORMAT_R && (funct3 == 3'b001) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
+  assign ADD = FORMAT_R && (funct3 == 3'b000) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
+  assign MUL = FORMAT_R && (funct3 == 3'b000) && (opcode == 7'b0110011) && (funct7 == 7'b0000001);
+  assign OR = FORMAT_R && (funct3 == 3'b110) && (opcode == 7'b0110011) && (funct7 == 7'b0000000);
   assign ALLOWED_R = AND || SLTU || MULH || SRA || XOR || SUB || SLT || MULHSU || MULHU || SRL || SLL || ADD || MUL || OR;
 
   assign FORMAT_SW = (rs2 < 16) && (rs1 < 16) && (instruction[31:30] == 00);
   assign SW = FORMAT_SW && (funct3 == 3'b010) && (opcode == 7'b0100011) && (rs1 == 5'b00000);
   assign ALLOWED_SW = SW;
 
-  assign FORMAT_NOP = (rs1 < 16) && (rd < 16);
   assign NOP = (opcode == 7'b1111111);
   assign ALLOWED_NOP = NOP;
 

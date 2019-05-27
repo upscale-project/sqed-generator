@@ -57,7 +57,8 @@ for bit_field in bit_fields:
 # Instantiate instructions
 verilog += I.newline(1)
 for ins_type in instructions:
-    if len(instructions[ins_type]["CONSTRAINT"]) > 0:
+    #if len(instructions[ins_type]["CONSTRAINT"]) > 0:
+    if ins_type != "NOP":
         verilog += I.signal_def(1, "wire", "FORMAT_"+ins_type, num_spaces=2)
         verilog += I.newline(1)
     verilog += I.signal_def(1, "wire", "ALLOWED_"+ins_type, num_spaces=2)
@@ -90,7 +91,7 @@ for ins_type in instructions:
     for type_constraint in type_constraints:
         constraints.append(type_constraint)
 
-    if len(constraints) > 0:
+    if ins_type != "NOP" and len(constraints) > 0:
         expression = constraints[0]
         for i in range(1, len(constraints)):
             expression = I._and(expression, constraints[i], parens=False)
@@ -108,7 +109,8 @@ for ins_type in instructions:
                     req = fields[field]
                     reqs.append(I._equals(field, I._constant(len(req), req), parens=True))
 
-            if len(instructions[ins_type]["CONSTRAINT"]) > 0:
+            #if len(instructions[ins_type]["CONSTRAINT"]) > 0:
+            if ins != "NOP":
                 reqs_expression = "FORMAT_" + ins_type
                 for i in range(len(reqs)):
                     reqs_expression = I._and(reqs_expression, reqs[i], parens=False)
