@@ -86,16 +86,13 @@ def generate_constraints_file(MODULENAME, INPUTS, OUTPUTS, format_dicts):
     verilog += I.newline(1)
     for ins_type in instructions:
         type_constraints = instructions[ins_type]["CONSTRAINT"]
-        constraints = []
+        constraints = type_constraints
 
         if qed_constraints["half_registers"] == "1":
             fields = ins_fields[ins_type].split()
             for field in fields:
                 if field in registers:
-                    constraints.append(I._lt(field, str(int(isa_info["instruction_length"])/2), parens=True))
-
-        for type_constraint in type_constraints:
-            constraints.append(type_constraint)
+                    constraints.append(I._lt(field, str(int(isa_info["num_registers"])/2), parens=True))
 
         if ins_type != "NOP" and len(constraints) > 0:
             expression = constraints[0]
@@ -109,14 +106,12 @@ def generate_constraints_file(MODULENAME, INPUTS, OUTPUTS, format_dicts):
         for ins in instructions[ins_type]:
             if ins != "CONSTRAINT":
                 fields = instructions[ins_type][ins]
-                #reqs = []
                 reqs = instructions[ins_type][ins]["CONSTRAINT"]
                 for field in fields:
                     if field != "CONSTRAINT":
                         req = fields[field]
                         reqs.append(I._equals(field, I._constant(len(req), req), parens=True))
 
-                #if len(instructions[ins_type]["CONSTRAINT"]) > 0:
                 if ins != "NOP":
                     reqs_expression = "FORMAT_" + ins_type
                     for i in range(len(reqs)):

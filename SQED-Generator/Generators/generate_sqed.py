@@ -5,6 +5,7 @@
 
 import copy
 import os
+from shutil import copyfile
 import sys
 sys.path.append("../FormatParsers/")
 sys.path.append("../Interface/")
@@ -12,27 +13,25 @@ sys.path.append("../Interface/")
 import format_parser as P
 import module_interface as I
 
-# Initial checks
+# Format file
 try:
-    sys.argv[1]
+    INFILE = sys.argv[1]
 except:
     print("ERROR: Please provide the format file path as the first argument.")
     quit()
-try:
-    sys.argv[2]
-except:
-    print("ERROR: Please provide the output write directory as the second argument.")
-    quit()
-
-# Format file
-INFILE = sys.argv[1]
 # Output directory
-OUTFILE = sys.argv[2]
-if not os.path.isdir(OUTFILE):
-    print("MESSAGE: Creating directory "+OUTFILE)
-    os.mkdir(OUTFILE)
-if OUTFILE[-1] != "/":
-    OUTFILE = OUTFILE + "/"
+try:
+    OUTFILE = sys.argv[2]
+    if not os.path.isdir(OUTFILE):
+        os.mkdir(OUTFILE)
+    if OUTFILE[-1] != "/":
+        OUTFILE = OUTFILE + "/"
+    copyfile("../QEDFiles/qed_i_cache.v", OUTFILE+"qed_i_cache.v")
+    copyfile("../QEDFiles/qed_instruction_mux.v", OUTFILE+"qed_instruction_mux.v")
+    print("MESSAGE: Created directory "+OUTFILE+" and moved mux and cache files.")
+except:
+    OUTFILE = "../QEDFiles/"
+    print("MESSAGE: Using default directory QEDFiles as output directory.")
 
 # Grabs all global ISA format information
 format_sections, format_dicts = P.parse_format(INFILE)

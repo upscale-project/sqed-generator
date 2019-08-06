@@ -77,7 +77,7 @@ def generate_decoder_file(MODULENAME, INPUTS, OUTPUTS, format_dicts):
         if not ins_type in ins_reqs:
             continue
         ins_req = ins_reqs[ins_type]
-        reqs = []
+        reqs = ins_reqs[ins_type]["CONSTRAINT"]
         for req in ins_req:
             if req != "CONSTRAINT":
                 reqs.append(I._equals(req, I._constant(len(ins_req[req]), ins_req[req]), parens=True))
