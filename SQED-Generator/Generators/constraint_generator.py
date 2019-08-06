@@ -11,10 +11,7 @@ sys.path.append("../Interface/")
 import format_parser as P
 import module_interface as I
 
-def generate_constraints_file(MODULENAME, INPUTS, OUTPUTS, FILE):
-    # Grabs all global ISA format information
-    format_sections, format_dicts = P.parse_format(FILE)
-
+def generate_constraints_file(MODULENAME, INPUTS, OUTPUTS, format_dicts):
     # Get ISA information
     isa_info = format_dicts["ISA"]
     # Get register names
