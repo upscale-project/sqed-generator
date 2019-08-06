@@ -75,24 +75,30 @@ def get_info(lines):
 
 # Main parsing function
 def parse_format(filename):
+    error = False
     try:
         # Read in all lines in format file
         f = open(filename, 'r')
         lines = f.readlines()
     except:
         print("ERROR: Could not open format file")
+        error = True
         quit()
 
     try:
         # First field in file must define all sections in file
-        while lines[0].find("SECTIONS") == -1:
+        while (comment(lines[0]) or (lines[0] == "\n") or lines[0].find("SECTIONS") == -1):
             lines = lines[1:]
         format_sections = lines[0]
         sections_index = format_sections.find("=")
         format_sections = format_sections[sections_index+2:]
         format_sections = format_sections.split()
     except:
-        print("ERROR: Issue in parsing SECTIONS in format file")
+        if len(lines) == 0:
+            print("ERROR: Could not find SECTIONS in Format File")
+        else:
+            print("ERROR: Issue in parsing SECTIONS in format file")
+        error = True
         quit()
 
     format_dicts = {}
@@ -109,26 +115,36 @@ def parse_format(filename):
             try:
                 format_name = format_sections[i]
                 if not line[1:-1] in format_name:
-                    print("CHECK: SECTIONS fields and actual SECTIONS not aligned for "+format_name)
+                    print("CHECK: SECTIONS field "+format_name+" and actual section "+line[1:-1]+" not aligned.")
+                    print("Please make sure to include "+line[1:-1]+" section in SECTIONS.")
+                    raise Exception()
             except:
                 print("ERROR: Please make sure to list all format file sections in SECTIONS")
+                error = True
                 quit()
             try :
                 format_dicts[format_name], lines = get_info(lines[1:])
             except:
-                print("ERROR: Issue while parsing the following section: "+line)
+                print("ERROR: Issue while parsing the following section: "+line[1:-1])
+                error = True
                 quit()
 
             i += 1
         else:
-            print("CHECK: Found a line that is not a comment but is in between sections")
+            print("CHECK: Skipping a line that is not a comment but is in between sections")
+            error = True
+            lines = lines[1:]
 
     f.close()
 
+    if error:
+        print("MESSAGE: Parser encountered weird lines that were skipped.")
+    else:
+        print("MESSAGE: Format File was read in without any issues.")
     return format_sections, format_dicts
 
 """
-s, r = parse_format("../FormatFiles/RV32M-ridecore_format.txt")
+s, r = parse_format("../FormatFiles/test.txt")
 print(s)
 print("\n")
 for key in r:
@@ -136,6 +152,4 @@ for key in r:
     print(r[key])
     print("\n")
 """
-
-
 
