@@ -135,6 +135,27 @@ def generate_modify_file(MODULENAME, INPUTS, OUTPUTS, format_dicts):
 
     # Assign the final qed instruction output after modification
     verilog += I.newline(1)
+    output_instruction = OUTPUTS.keys()[0]
+    types = ins_reqs.keys()
+    types.remove("CONSTRAINT")
+    conditional = ""
+    for i in range(len(types)):
+        ins_type = types[i]
+        if i < len(types) - 1:
+            false = "("
+        else:
+            false = "qic_qimux_instruction"
+        conditional += I.inline_conditional("IS_"+ins_type, "INS_"+ins_type, false, False)
+    conditional += (len(types) - 1) * ")"
+    verilog += I.assign_def(output_instruction, conditional, num_spaces=2)
+    verilog += I.newline(1)
+
+    # This code does the same thing as above, 
+    # but utilizes the always_comb logic
+    # to make it more readable. However
+    # this will cause certain verilog compilers
+    # to complain.
+    """
     verilog += I.always_comb_def(num_spaces=2)
     verilog += I.newline(1)
     output_instruction = OUTPUTS.keys()[0]
@@ -163,6 +184,7 @@ def generate_modify_file(MODULENAME, INPUTS, OUTPUTS, format_dicts):
         verilog += I.newline(1)
     verilog += I.end(num_spaces=2)
     verilog += I.newline(1)
+    """
 
     # Module footer
     verilog += I.newline(1)
