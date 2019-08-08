@@ -77,10 +77,20 @@ def generate_decoder_file(MODULENAME, INPUTS, OUTPUTS, format_dicts):
         if not ins_type in ins_reqs:
             continue
         ins_req = ins_reqs[ins_type]
-        reqs = ins_reqs[ins_type]["CONSTRAINT"]
-        for req in ins_req:
-            if req != "CONSTRAINT":
-                reqs.append(I._equals(req, I._constant(len(ins_req[req]), ins_req[req]), parens=True))
+        reqs = ins_req["CONSTRAINT"]
+        for field in ins_req:
+            if field != "CONSTRAINT":
+                if type(ins_req[field]) == type([]):
+                    first = ins_req[field][0]
+                    req_expression = I._equals(field, I._constant(len(first), first), parens=True)
+                    for req in ins_req[field][1:]:
+                        equality = I._equals(field, I._constant(len(req), req), parens=True)
+                        req_expression = I._or(req_expression, equality, parens=False)
+                    req_expression = "(" + req_expression + ")"
+                    reqs.append(req_expression)
+                else:
+                    equality = I._equals(field, I._constant(len(ins_req[field]), ins_req[field]), parens=True)
+                    reqs.append(equality)
 
         reqs_expression = reqs[0]
         for i in range(1, len(reqs)):

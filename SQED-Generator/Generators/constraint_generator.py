@@ -63,7 +63,6 @@ def generate_constraints_file(MODULENAME, INPUTS, OUTPUTS, format_dicts):
     # Instantiate instructions
     verilog += I.newline(1)
     for ins_type in instructions:
-        #if len(instructions[ins_type]["CONSTRAINT"]) > 0:
         if ins_type != "NOP":
             verilog += I.signal_def(1, "wire", "FORMAT_"+ins_type, num_spaces=2)
             verilog += I.newline(1)
@@ -106,11 +105,20 @@ def generate_constraints_file(MODULENAME, INPUTS, OUTPUTS, format_dicts):
         for ins in instructions[ins_type]:
             if ins != "CONSTRAINT":
                 fields = instructions[ins_type][ins]
-                reqs = instructions[ins_type][ins]["CONSTRAINT"]
+                reqs = fields["CONSTRAINT"]
                 for field in fields:
                     if field != "CONSTRAINT":
-                        req = fields[field]
-                        reqs.append(I._equals(field, I._constant(len(req), req), parens=True))
+                        if type(fields[field]) == type([]):
+                            first = fields[field][0]
+                            req_expression = I._equals(field, I._constant(len(first), first), parens=True)
+                            for req in fields[field][1:]:
+                                equality = I._equals(field, I._constant(len(req), req), parens=True)
+                                req_expression = I._or(req_expression, equality, parens=False)
+                            req_expression = "(" + req_expression + ")"
+                            reqs.append(req_expression)
+                        else:
+                            equality = I._equals(field, I._constant(len(fields[field]), fields[field]), parens=True)
+                            reqs.append(equality)
 
                 if ins != "NOP":
                     reqs_expression = "FORMAT_" + ins_type

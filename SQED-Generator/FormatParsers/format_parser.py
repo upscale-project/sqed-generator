@@ -50,7 +50,13 @@ def get_info(lines):
             req_index = req.find("=")
             req_name = req[0:req_index-1]
             req = req[req_index+2:-1]
-            inner_info[req_name] = req
+            if req_name in inner_info:
+                if type(inner_info[req_name]) == type([]):
+                    inner_info[req_name].append(req)
+                else:
+                    inner_info[req_name] = [inner_info[req_name], req]
+            else:
+                inner_info[req_name] = req
             lines = lines[1:]
 
         else:
@@ -143,13 +149,17 @@ def parse_format(filename):
         print("MESSAGE: Format File was read in without any issues.")
     return format_sections, format_dicts
 
-"""
-s, r = parse_format("../FormatFiles/test.txt")
-print(s)
-print("\n")
-for key in r:
-    print(key)
-    print(r[key])
+# Helps in debugging and viewing
+# what the parser is outputting, 
+# and how it structures the data
+def parser_display(f):
+    sections, info = parse_format(f)
+    print(sections)
     print("\n")
-"""
+    for key in info:
+        print(key)
+        print(info[key])
+        print("\n")
+
+parser_display("../FormatFiles/test.txt")
 
