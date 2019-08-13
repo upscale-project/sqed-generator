@@ -161,5 +161,5 @@ def parser_display(f):
         print(info[key])
         print("\n")
 
-parser_display("../FormatFiles/test.txt")
+#parser_display("../FormatFiles/test.txt")
 
