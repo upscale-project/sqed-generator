@@ -78,8 +78,16 @@ except:
     print("ERROR: Format file is missing necessary section: "+needed_sections[not_found])
     quit()
 
+# SIC files 
 try:
-    # Constraints file
+    from SIC_generator import *
+    generate_SIC_files(format_dicts)
+    print("MESSAGE: Generated and wrote single instruction check files.")
+except:
+    print("ERROR: Unable to generate SIC files.")
+
+# Constraints file
+try:
     from constraint_generator import *
     MODULENAME = "inst_constraint"
     INPUTS = {"clk": 1, "instruction": int(isa_info["instruction_length"])}
