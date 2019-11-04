@@ -13,5 +13,5 @@ prove: False
 bmc_length: 8
 description: "Check for Single Instruction"
 verification: safety
-assumptions: (reset_x = 1_1);(state_counter = 0_10) -> (inst_constraint0.NOP = 1_1);(state_counter = 1_10) -> ((inst_constraint0.NOP = 1_1) & (rd != 0_5));
+assumptions: (reset_x = 1_1);(state_counter = 0_10) -> (inst_constraint0.NOP = 1_1);(state_counter = 1_10) -> ((inst_constraint0.NOP = 1_1));
 properties: (state_counter = 7_10) -> 

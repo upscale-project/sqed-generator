@@ -3,6 +3,9 @@
 # This source code is patent protected and being made available under the
 # terms explained in the ../LICENSE-Academic and ../LICENSE-GOV files.
 
+# Author: Mario J Srouji
+# Email: msrouji@stanford.edu
+
 import copy
 import sys
 sys.path.append("../FormatParsers/")
@@ -116,7 +119,12 @@ def generate_modify_file(MODULENAME, INPUTS, OUTPUTS, format_dicts):
     # Assign the new instruction types with the modified fields
     verilog += I.newline(1)
     if len(ins_types["CONSTRAINT"]) > 0:
-        mem_types = ins_types["CONSTRAINT"][0].split()
+        ins_types_defs = {}
+        for c in ins_types["CONSTRAINT"]:
+            parts = c.split(",")
+            ins_types_defs[parts[0]] = parts[1:]
+
+        mem_types = ins_types_defs["MEMORYTYPE"]
     else:
         mem_types = []
 

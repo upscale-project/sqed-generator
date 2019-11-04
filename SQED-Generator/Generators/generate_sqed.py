@@ -3,6 +3,9 @@
 # This source code is patent protected and being made available under the
 # terms explained in the ../LICENSE-Academic and ../LICENSE-GOV files.
 
+# Author: Mario J Srouji
+# Email: msrouji@stanford.edu
+
 import copy
 import os
 from shutil import copyfile
@@ -32,6 +35,21 @@ try:
 except:
     OUTFILE = "../QEDFiles/"
     print("MESSAGE: Using default directory QEDFiles as output directory.")
+# SIC COSA OPS
+try:
+    OPSFILE = sys.argv[3]
+except:
+    OPSFILE = None
+    print("MESSAGE: SIC Cosa operator file was not provided. Omitting SIC generation.")
+
+# LICENSE file to be included as header for all generated files
+try:
+    f = open("LICENSE.v", 'r')
+    license_header = f.read() + "\n"
+    f.close()
+except:
+    print("MESSAGE: Unable to read LICENSE.v file, please include user license information.")
+    quit()
 
 # Grabs all global ISA format information
 format_sections, format_dicts = P.parse_format(INFILE)
@@ -79,12 +97,13 @@ except:
     quit()
 
 # SIC files 
-try:
-    from SIC_generator import *
-    generate_SIC_files(format_dicts)
-    print("MESSAGE: Generated and wrote single instruction check files.")
-except:
-    print("ERROR: Unable to generate SIC files.")
+if not OPSFILE is None:
+    try:
+        from SIC_generator import *
+        generate_SIC_files(format_dicts, OPSFILE)
+        print("MESSAGE: Generated and wrote single instruction check files.")
+    except:
+        print("ERROR: Unable to generate SIC files.")
 
 # Constraints file
 try:
@@ -103,7 +122,7 @@ except:
 
 try:
     f = open(OUTFILE+"inst_constraints.v", 'w')
-    f.write(verilog)
+    f.write(license_header+verilog)
     f.close()
     print("MESSAGE: Generated and wrote constraints file.")
 except:
@@ -123,7 +142,7 @@ except:
     
 try:
     f = open(OUTFILE+"qed_decoder.v", 'w')
-    f.write(verilog)
+    f.write(license_header+verilog)
     f.close()
     print("MESSAGE: Generated and wrote decoder file.")
 except:
@@ -143,7 +162,7 @@ except:
 
 try:
     f = open(OUTFILE+"modify_instruction.v", 'w')
-    f.write(verilog)
+    f.write(license_header+verilog)
     f.close()
     print("MESSAGE: Generated and wrote modify file.")
 except:
@@ -164,7 +183,7 @@ except:
 
 try:
     f = open(OUTFILE+"qed.v", 'w')
-    f.write(verilog)
+    f.write(license_header+verilog)
     f.close()
     print("MESSAGE: Generated and wrote top-level qed file.")
 except:

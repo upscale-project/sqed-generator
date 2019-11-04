@@ -1,6 +1,14 @@
 # You can use python style comments with (#)
 # to add notes, or comment out lines.
 
+# Copyright (c) Stanford University
+# 
+# This source code is patent protected and being made available under the
+# terms explained in the ../LICENSE-Academic and ../LICENSE-GOV files.
+
+# Author: Mario J Srouji
+# Email: msrouji@stanford.edu
+
 SECTIONS = SIC ISA QEDCONSTRAINTS REGISTERS MEMORY BITFIELDS INSTYPES INSFIELDS INSREQS R I LW SW NOP
 
 _SIC
@@ -29,10 +37,8 @@ REGVALUE
 val1 = 5
 val2 = 5
 
-LOADDELAY
+DELAY
 LW = 1
-
-STOREDELAY
 SW = 2
 
 GENERAL
@@ -55,9 +61,9 @@ verification = safety
 bmc_length = 8
 
 ASSUMPTIONS
-CONSTRAINT (rd != 0_5)
+CONSTRAINT R,I,LW,SW,(rd != 0_5)
 
-PROPERTIES
+#PROPERTIES
 
 _ISA
 num_registers = 32
@@ -100,7 +106,10 @@ imm5 = 11 7
 # the modify file to define the memory
 # instructions 
 _INSTYPES
-CONSTRAINT MEMORYTYPE: LW SW
+CONSTRAINT MEMORYTYPE,LW,SW
+CONSTRAINT IMMEDIATETYPE,I
+CONSTRAINT REGISTERTYPE,R
+CONSTRAINT NOPTYPE,NOP
 
 R
 I

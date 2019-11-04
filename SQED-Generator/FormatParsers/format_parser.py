@@ -1,7 +1,10 @@
 # Copyright (c) Stanford University
-#
+# 
 # This source code is patent protected and being made available under the
 # terms explained in the ../LICENSE-Academic and ../LICENSE-GOV files.
+
+# Author: Mario J Srouji
+# Email: msrouji@stanford.edu
 
 def constraint(line):
     return line.find("CONSTRAINT") != -1
@@ -161,5 +164,5 @@ def parser_display(f):
         print(info[key])
         print("\n")
 
-#parser_display("../FormatFiles/test.txt")
+#parser_display("../FormatFiles/RV32M-ridecore_format.txt")
 
