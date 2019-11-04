@@ -4,7 +4,10 @@
 - Clean up and comment code.
 - Try out new ISAs and create case study sub-directories in git repo that are complete for a demo (and work).
 - Release another public version of the tool.
-- Make tool include license information in all generated files and make sure they are in the code files.
 - Make tool generate the cache and mux files in case instructions are different bit-widths.
 - Figure out a method to help wire SQED to a processor (move qed_ready signal logic, think of a new way / automate).
 - Is there a way to generate the format file / make a tool that can help the user generate it. 
+
+- Generate .ssts files for SIC
+- Fixes in SIC_generator.py
+- Need tool to generalize better (try another ISA)
