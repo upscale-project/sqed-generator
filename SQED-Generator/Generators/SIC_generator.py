@@ -82,7 +82,57 @@ def get_ins_type_def(ins, ins_types, format_dicts):
         return None
     else:
         return None
-    
+
+def generate_ssts_files(bit_fields):
+    text = ""
+
+    # INPUT
+    text += "INPUT"
+    text += "\n"
+
+    # OUTPUT
+    text += "OUTPUT"
+    text += "\n"
+
+    # STATE
+    text += "STATE"
+    text += "\n"
+    for bit_field in bit_fields:
+        if field != "CONSTRAINT":
+            msb, lsb = bit_fields[bit_field].split()
+            bits = int(msb) - int(lsb) + 1
+            
+            text += field + " : " + "BV" + "(" + str(bits)+ ")" + ";"
+            text += "\n"
+
+
+    text += "\n"
+
+    # INIT
+    text += "INIT"
+    text += "\n"
+    for bit_field in bit_fields:
+        if field != "CONSTRAINT":
+            msb, lsb = bit_fields[bit_field].split()
+            bits = int(msb) - int(lsb) + 1
+            
+            text += field + " = " + "0_" + str(bits) + ";"
+            text += "\n"
+
+    text += "\n"
+
+    # INVAR
+    text += "INVAR"
+    text += "\n"
+
+    text += "\n"
+
+    # TRANS
+
+
+
+
+
 
 def generate_SIC_files(format_dicts, OPSFILE):
     # Single instruction checking information
@@ -107,10 +157,14 @@ def generate_SIC_files(format_dicts, OPSFILE):
     instructions = {}
     for instype in format_dicts["INSTYPES"].keys():
         if instype != "CONSTRAINT":
-            for ins in format_dicts[instype]:
+            tefor ins in format_dicts[instype]:
                 if ins != "CONSTRAINT":
                     instructions[ins] = format_dicts[instype][ins]
 
+    # Generates .ssts files for COSA 
+    generate_ssts_files(bit_fields)
+
+    # Gather all needed data from format file 
     reset, reset_bits = take(SIC_info["RESET"]) 
     counter, counter_bits = take(SIC_info["COUNTER"]) 
     module, _ = take(SIC_info["MODULENAME"])
