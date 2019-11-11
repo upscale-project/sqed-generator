@@ -1,0 +1,41 @@
+INPUT
+
+OUTPUT
+
+STATE
+shamt_copy : BV(5);
+imm12_copy : BV(12);
+rd_copy : BV(5);
+funct3_copy : BV(3);
+opcode_copy : BV(7);
+imm7_copy : BV(7);
+funct7_copy : BV(7);
+imm5_copy : BV(5);
+rs1_copy : BV(5);
+rs2_copy : BV(5);
+
+INIT
+shamt_copy = 0_5;
+imm12_copy = 0_12;
+rd_copy = 0_5;
+funct3_copy = 0_3;
+opcode_copy = 0_7;
+imm7_copy = 0_7;
+funct7_copy = 0_7;
+imm5_copy = 0_5;
+rs1_copy = 0_5;
+rs2_copy = 0_5;
+
+INVAR
+
+TRANS
+next(shamt_copy) = state_counter = 1_10 ? shamt : shamt_copy;
+next(imm12_copy) = state_counter = 1_10 ? imm12 : imm12_copy;
+next(rd_copy) = state_counter = 1_10 ? rd : rd_copy;
+next(funct3_copy) = state_counter = 1_10 ? funct3 : funct3_copy;
+next(opcode_copy) = state_counter = 1_10 ? opcode : opcode_copy;
+next(imm7_copy) = state_counter = 1_10 ? imm7 : imm7_copy;
+next(funct7_copy) = state_counter = 1_10 ? funct7 : funct7_copy;
+next(imm5_copy) = state_counter = 1_10 ? imm5 : imm5_copy;
+next(rs1_copy) = state_counter = 1_10 ? rs1 : rs1_copy;
+next(rs2_copy) = state_counter = 1_10 ? rs2 : rs2_copy;

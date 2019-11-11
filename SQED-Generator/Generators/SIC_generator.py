@@ -83,56 +83,147 @@ def get_ins_type_def(ins, ins_types, format_dicts):
     else:
         return None
 
-def generate_ssts_files(bit_fields):
+def generate_init_ssts_file():
+    pass
+
+def generate_nop_ssts_file():
     text = ""
 
     # INPUT
     text += "INPUT"
-    text += "\n"
+    text += 2*"\n"
 
     # OUTPUT
     text += "OUTPUT"
+    text += 2*"\n"
+
+    # STATE
+    text += "STATE"
+    text += 2*"\n"
+
+    # INIT
+    text += "INIT"
+    text += 2*"\n"
+
+    # INVAR
+    text += "INVAR"
     text += "\n"
+
+    # TODO fix
+    state_counter = "state_counter"
+    module_name = "inst_constraint0"
+    NOP = "NOP"
+
+    text += "(" + state_counter + " >= 2_10) -> " + "(" + module_name + "." + NOP + " = 1_1);"
+    text += 2*"\n"
+
+    # TRANS
+    text += "TRANS"
+
+    f = open("../SICFiles/nop_m.ssts", 'w')
+    f.write(text)
+    f.close()
+
+def generate_counter_ssts_file():
+    text = ""
+
+    # INPUT
+    text += "INPUT"
+    text += 2*"\n"
+
+    # OUTPUT
+    text += "OUTPUT"
+    text += 2*"\n"
 
     # STATE
     text += "STATE"
     text += "\n"
+
+    # TODO fix
+    state_counter = "state_counter"
+    bits = 10
+
+    text += state_counter + " : " + "BV" + "(" + str(bits)+ ")" + ";"
+    text += 2*"\n"
+
+    # INIT 
+    text += "INIT"
+    text += "\n"
+    text += state_counter + " = " + "0_" + str(bits) + ";"
+    text += 2*"\n"
+
+    # INVAR
+    text += "INVAR"
+    text += 2*"\n"
+
+    # TRANS
+    text += "TRANS"
+    text += "\n"
+    text += "next(" + state_counter + ")" + " = " + state_counter + " + " + "1_" + str(bits) + ";"
+
+    f = open("../SICFiles/state_counter.ssts", 'w')
+    f.write(text)
+    f.close()
+
+def generate_copy_ssts_file(bit_fields):
+    text = ""
+
+    # INPUT
+    text += "INPUT"
+    text += 2*"\n"
+
+    # OUTPUT
+    text += "OUTPUT"
+    text += 2*"\n"
+
+    # TODO STATE needs extension
+    text += "STATE"
+    text += "\n"
     for bit_field in bit_fields:
-        if field != "CONSTRAINT":
+        if bit_field != "CONSTRAINT":
             msb, lsb = bit_fields[bit_field].split()
             bits = int(msb) - int(lsb) + 1
             
-            text += field + " : " + "BV" + "(" + str(bits)+ ")" + ";"
+            text += bit_field + "_copy" + " : " + "BV" + "(" + str(bits)+ ")" + ";"
             text += "\n"
 
 
     text += "\n"
 
-    # INIT
+    # TODO INIT needs extension
     text += "INIT"
     text += "\n"
     for bit_field in bit_fields:
-        if field != "CONSTRAINT":
+        if bit_field != "CONSTRAINT":
             msb, lsb = bit_fields[bit_field].split()
             bits = int(msb) - int(lsb) + 1
             
-            text += field + " = " + "0_" + str(bits) + ";"
+            text += bit_field + "_copy" + " = " + "0_" + str(bits) + ";"
             text += "\n"
 
     text += "\n"
 
     # INVAR
     text += "INVAR"
+    text += 2*"\n"
+
+    # TODO: TRANS needs extension
+    text += "TRANS"
     text += "\n"
 
-    text += "\n"
-
-    # TRANS
-
-
-
-
-
+    # TODO: fix state_counter
+    state_counter = "state_counter"
+    check = state_counter + " = " + "1_10"
+    for bit_field in bit_fields:
+        if bit_field != "CONSTRAINT":
+            copied =  bit_field + "_copy"
+            # TODO: inline conditional - support more instructions
+            text += "next(" + copied + ")" + " = " + I.inline_conditional(check, bit_field, copied, True)
+            text += "\n"
+            
+    f = open("../SICFiles/state_copy.ssts", 'w')
+    f.write(text)
+    f.close()
 
 def generate_SIC_files(format_dicts, OPSFILE):
     # Single instruction checking information
@@ -157,12 +248,14 @@ def generate_SIC_files(format_dicts, OPSFILE):
     instructions = {}
     for instype in format_dicts["INSTYPES"].keys():
         if instype != "CONSTRAINT":
-            tefor ins in format_dicts[instype]:
+            for ins in format_dicts[instype]:
                 if ins != "CONSTRAINT":
                     instructions[ins] = format_dicts[instype][ins]
 
     # Generates .ssts files for COSA 
-    generate_ssts_files(bit_fields)
+    generate_copy_ssts_file(bit_fields)
+    generate_counter_ssts_file()
+    generate_nop_ssts_file()
 
     # Gather all needed data from format file 
     reset, reset_bits = take(SIC_info["RESET"]) 
