@@ -28,7 +28,8 @@ This tool supports the usage of both Python2.7 and Python3
 To run the generation scripts, you need to define a format file similar to 
 the ones in the FormatFiles directory, and optionally a COSA operator mapping 
 file (more details below). Please see the README in the ../FormatFiles directory 
-for more information. 
+for more information, and take a look at the RV32M-ridecore_format.txt format file. 
+It provides a detailed example of creating a format file for the Ridecore RV32M RISCV ISA. 
 
 To run the main script, go to the Generators directory and run the generate_sqed.py 
 script as in the following example:
