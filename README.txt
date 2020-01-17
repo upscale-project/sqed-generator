@@ -41,6 +41,11 @@ See the README.txt file in /SQED-Generator directory.
 Organization of repository:
 ---------------------------
 
+Directory 'SQED-Generator'
+
+Contains all scripts, documentation, and text files related to
+the generic SQED generators. 
+
 Directory 'custom-sqed-modules':
 
 A collection of QED modules (Verilog sources) that we already
@@ -68,8 +73,3 @@ variant 2. above).
 Directory 'materials':
 
 Contains various material related to SQED such as slides etc.
-
-Directory 'SQED-Generator'
-
-Contains all scripts, documentation, and text files related to
-the generic SQED generators. 
