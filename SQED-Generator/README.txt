@@ -23,6 +23,12 @@ COSA single instruction check text files + .ssts files for COSA. Use these as an
 of what the tool is generating based on the format file specified in the path
 ../FormatFiles/RV32M-ridecore_format.txt for more concretness.
 
+See ../FormatFiles/RV32M-ridecore_format.txt for an example format file with extensive comments. 
+
+See ../FormatParsers/format_parser.py to learn how the format file parser works. Use the 
+parser_display(file) function at the bottom to display exactly how the data structure looks 
+after the parser ingests a given format file. 
+
 ###########################################
                                       SETUP
 ###########################################
