@@ -71,7 +71,7 @@ def generate_decoder_file(MODULENAME, INPUTS, OUTPUTS, format_dicts):
     for bit_field in bit_fields:
         if bit_field != "CONSTRAINT":
             msb, lsb = bit_fields[bit_field].split()
-            verilog += I.assign_def(bit_field, I.signal_index(INPUTS.keys()[0], msb, lsb), num_spaces=2)
+            verilog += I.assign_def(bit_field, I.signal_index(list(INPUTS.keys())[0], msb, lsb), num_spaces=2)
             verilog += I.newline(1)
 
     # Assign instruction types requirements

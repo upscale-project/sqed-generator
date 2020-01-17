@@ -143,8 +143,8 @@ def generate_modify_file(MODULENAME, INPUTS, OUTPUTS, format_dicts):
 
     # Assign the final qed instruction output after modification
     verilog += I.newline(1)
-    output_instruction = OUTPUTS.keys()[0]
-    types = ins_reqs.keys()
+    output_instruction = list(OUTPUTS.keys())[0]
+    types = list(ins_reqs.keys())
     types.remove("CONSTRAINT")
     conditional = ""
     for i in range(len(types)):
