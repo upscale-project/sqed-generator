@@ -14,6 +14,16 @@ for knowing how the generators work, and for being able to sanity check the
 output of the generators (the verilog files). See here: http://theory.stanford.edu/~barrett/pubs/SLB+16.pdf 
 
 ###########################################
+                                 QUICK NOTE
+###########################################
+
+Inside of the ../QEDFiles directory, and the ../SICFiles directory you will find 
+the outputted verilog files for performing SQED for the RV32M RISCV ISA, and the outputted 
+COSA single instruction check text files + .ssts files for COSA. Use these as an example 
+of what the tool is generating based on the format file specified in the path
+../FormatFiles/RV32M-ridecore_format.txt for more concretness.
+
+###########################################
                                       SETUP
 ###########################################
 
