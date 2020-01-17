@@ -117,6 +117,14 @@ SIC_generator.py - This is the main (and only) file that generates the Single In
 text files, and .ssts files. This is a work in progress still, but it has a good amount of 
 the generation automated already.
 
+Python String/Verilog Interface:
+
+module_interface.py - In this script, I have all of the internal tool-functions in charge of 
+transforming common Verilog syntax into Python strings. As an example, there are functions that 
+allow you to add 'assign' statements, define modules, add conditionals, assign bit vectors, etc...
+This is where you should Verilog-String functionality in the future. See the Generator code files for
+more concrete examples of how this script is leveraged. 
+
 Miscellaneous:
 
 clean.py - A simple script to delete files in the ../QEDFiles directory.
