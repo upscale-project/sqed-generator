@@ -41,7 +41,7 @@ See the README.txt file in /SQED-Generator directory.
 Organization of repository:
 ---------------------------
 
-Directory 'SQED-Generator'
+Directory 'SQED-Generator':
 
 Contains all scripts, documentation, and text files related to
 the generic SQED generators. 
