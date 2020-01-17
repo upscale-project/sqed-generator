@@ -10,11 +10,14 @@
 # to add notes, or comment out lines. They will not be parsed. 
 
 
+####################### SIC Generator ONLY
 
 # Here we define all of our sections in the format file,
 # in order, separated by a single space. Sections are 
 # defined as _NAME where NAME is the name of the section, 
-# down below. 
+# down below. Note the relative ordering of these sections is
+# not important, as long as they exist both here, and in down below
+# in the same relative order.
 SECTIONS = SIC ISA QEDCONSTRAINTS REGISTERS MEMORY BITFIELDS INSTYPES INSFIELDS INSREQS R I LW SW NOP
 
 # This defines section SIC (Single Instruction Checking only).
@@ -23,13 +26,15 @@ SECTIONS = SIC ISA QEDCONSTRAINTS REGISTERS MEMORY BITFIELDS INSTYPES INSFIELDS 
 # simplified, but for now this presents a working version. 
 _SIC
 # These are called fields (i.e MODULENAME is a field).
-# Fields are used to define sub-sections within a section,
-# like SIC. 
+# Fields are used to define sub-sections within a section. 
 MODULENAME
 inst_constraint0 = NULL
 
 COUNTER
 state_counter = 10
+# state_counter here is called a definition, as it 
+# includes an '=' sign to give state_counter a 
+# value of '10'
 
 RESET
 reset_x = 1
@@ -78,31 +83,52 @@ CONSTRAINT R,I,LW,SW,(rd != 0_5)
 
 #PROPERTIES
 
+####################### SIC Generator ONLY
+
+
+####################### SQED Generator ONLY
+
+# You need to define the ISA section in order to include
+# ISA specific information like number of registers, 
+# instruction length, pipeline depth, active low, etc...
+# Any definitions for variables you see should be included 
+# in your format file (num_registers, etc...). You can add
+# more definitions (or even new fields with definitions) if you 
+# wish to extend the generators. I recommend you understand how 
+# the parser works to (see ../FormatParsers/format_parser.py) to
+# understand how the data here gets structured as a Python dictionary.
 _ISA
 num_registers = 32
 instruction_length = 32
 pipeline_depth = 6
 active_low = 1
 
+# This section defines what constraints to apply onto
+# the SQED (i.e half of the registers are for duplicate
+# instructions, half of the memory, etc...). you most likely
+# do not need to change this.
 _QEDCONSTRAINTS
 # Divides register space in half for duplicate instructions
 half_registers = 1
 # Divides memory in half and uses unsigned addresses
 half_memory = 1
 
-# Defines which fields are registers for
-# both the constraints, and modify file
+# Defines which bit fields in the instruction are registers for
+# both the constraints, and modify file for SQED.
 _REGISTERS
 rd
 rs1
 rs2
 
-# Defines the memory fields to be modified in the 
-# modify file 
+# Defines which bit fields in the instruction are memory 
+# fields to be modified in the modify file for SQED.
 _MEMORY
 imm12
 imm7
 
+# Defines the different bit fields for the instruction,
+# and where they are located in the instruction (using
+# inclusive bounds, index 0 is the LSB).
 _BITFIELDS
 funct7 = 31 25
 funct3 = 14 12
@@ -115,21 +141,32 @@ imm12 = 31 20
 imm7 = 31 25
 imm5 = 11 7
 
-# Putting constraints here affects
-# the modify file to define the memory
-# instructions 
+# This defines the instruction types for the ISA.
 _INSTYPES
+# Putting constraints here affects
+# the modify file in SQED to define the memory
+# instructions. This notation involves 
+# classifying the ISA instruction types into types
+# that the tool understands. For example, we classified
+# LW and SW as MEMORYTYPE.
 CONSTRAINT MEMORYTYPE,LW,SW
 CONSTRAINT IMMEDIATETYPE,I
 CONSTRAINT REGISTERTYPE,R
 CONSTRAINT NOPTYPE,NOP
 
+# Notice here we are defining 'fields' such as 
+# 'R', 'I', etc... without assigning values. See
+# ../FormatParsers/format_parser.py for more info
+# on how this is structured in the tool data-structure. 
 R
 I
 LW
 SW
 NOP
 
+# This defines which bit fields are present in
+# each instruction type (in the corresponding order
+# as in the instruction). 
 _INSFIELDS
 R = funct7 rs2 rs1 funct3 rd opcode
 I = imm12 rs1 funct3 rd opcode
@@ -137,16 +174,24 @@ LW = imm12 rs1 funct3 rd opcode
 SW = imm7 rs2 rs1 funct3 imm5 opcode
 NOP = imm12 rs1 funct3 rd opcode
 
-# Putting constraints here affects the 
-# decoder file 
+# This section defines the requirements 
+# to determine what instruction type a
+# given instruction is, based on the bit fields.
+# Putting constraints in this section affects the 
+# decoder file for SQED.
 _INSREQS
 R
 # Put the constraints here for each 
 # instruction type so that they are added 
 # into the decoder file as part of 
-# the IS_ins decoding process
+# the IS_ins decoding process (see qed_decoder.py).
+# This is an easy way to add manual constraints, we
+# did not need it here.
 opcode = 0110011
 
+# Once again, 'I' here is a 'field' inside of 'section'
+# 'INSREQS'. The 'field' 'I' has definitions 'opcode', 
+# with value '0010011'
 I
 opcode = 0010011
 
@@ -158,17 +203,22 @@ SW
 opcode = 0100011
 funct3 = 010
 
-# Adding constraints
-# in the instruction types
-# below affects the constraints file output
+# The following sections (such as 'R', etc...) now define 
+# the instructions associated with each instruction type in
+# the ISA.
+# Adding constraints in the instruction types
+# below affects the constraints file output for SQED.
 _R
-# Adding a constraint here puts it as an
-# instruction or "format" type constraint
+# Adding a constraint right here puts it as an
+# instruction or "format" type constraint for SQED.
 
+# This is a 'field' called 'ADD', which is
+# actually the name of the ADD instruction in the ISA.
 ADD
 # Putting a constraint here puts it
-# as a constraint for the specific instruction
-# in the constraints file
+# as a constraint for the specific instruction 'ADD'
+# in the constraints file for SQED. Below we defined the
+# bit field values for an ADD instruction (given from the ISA spec).
 funct3 = 000
 funct7 = 0000000
 opcode = 0110011
@@ -287,6 +337,8 @@ opcode = 0000011
 funct3 = 010
 
 _SW
+# We added these constraints to the memory
+# operations. 
 CONSTRAINT (instruction[31:30] == 00)
 
 SW
@@ -294,10 +346,13 @@ rs1 = 00000
 opcode = 0100011
 funct3 = 010
 
+# We classified NOP as both an instruction type, 
+# and as an instruction to make our generator work. 
 _NOP
 NOP
 opcode = 1111111
 
+####################### SQED Generator ONLY
 
 
 
