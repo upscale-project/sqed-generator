@@ -4,7 +4,16 @@ OPTIONAL APPROACH: COMPILATION OF QED MODULES FROM A GIVEN ISA SPECIFICATION
 
 This file contains notes from discussions about a possible workflow
 that generates a QED module from a specification of an ISA that is
-provided by the designer.
+provided by the designer. These notes are provided here in order to give
+you an idea of the type of design decisions we made when we first began 
+work on the SQED generators. 
+
+Please note that this document does not describe
+the current state of the tool, as it has grown and advanced quite significantly 
+from the original version. For more details on the tool, please visit the Wiki 
+(a work in progress), or the README. We also have a beta-version of the generator that
+generates the Single Instruction Checking files for a given ISA. We are actively 
+working to improve the SIC generators.
 
 Compiling QED modules from a given specification is an approach that
 is alternative to directly implementing a generic QED module in
@@ -87,21 +96,3 @@ Steps towards a compilation tool chain:
     func7 = ..
   ...
 
-Notes:
-
-- It should be possible to obtain instruction constraints directly
-  from an ISA specification document (from tables listing the
-  opcodes). The designer has to convert the information in that table
-  into our structured format for the specification file.
-
-- Make memory size a parameter.
-
-- See the 'inst_constraints.sv' files, these depend on the ISA.
-
-- Module 'qed.v': maybe the i_cache will have to be parametrized.
-
-- Note that not all instructions are present in every ISA, e.g. ORBIS
-  has EXT instructions which, e.g., Ridecore has not.
-
-- Module modify_instructions.v: might need to support different
-  numbers of parameters, depending on ISA.
