@@ -14,15 +14,15 @@ module.
 Based on discussions, we had envisioned two possible ways to implement a
 generic QED module:
 
-1.) A generic implementation in Verilog that can is parameterized by
-    design specific properties such instruction format, opcodes,
+1.) A generic implementation in Verilog that is parameterized by
+    design specific properties such as instruction format, opcodes,
     instruction types, etc.
 
 2.) A compilation approach where the designer specifies the ISA of the
     given design in a predefined, structured format that we
     formulate. We implement a tool that parses the specification file
-    provided by the designer in our format and automatically generates
-    the Verilog sources of the QED module of the given design.
+    provided by the designer in our format and automatically generate
+    the Verilog sources of the QED module for the given design.
 
     File 'notes-on-compilation-workflow.txt' contains some notes on
     that approach.
