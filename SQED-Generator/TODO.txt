@@ -1,13 +1,48 @@
-- Add more error detection in parser + generators (maybe).
+#################################
+MORE ERROR DETECTION / HELP USER
+#################################
+
+- Add more error detection in parser + generators.
+
 - Create format file checker that informs user of potential issues - like including fields that are not defined.
-- Create a detailed README for tool.
-- Clean up and comment code.
-- Try out new ISAs and create case study sub-directories in git repo that are complete for a demo (and work).
-- Release another public version of the tool.
-- Make tool generate the cache and mux files in case instructions are different bit-widths.
+
 - Figure out a method to help wire SQED to a processor (move qed_ready signal logic, think of a new way / automate).
+
 - Is there a way to generate the format file / make a tool that can help the user generate it. 
 
-- Generate .ssts files for SIC
+############
+NEW FEATURES
+############
+
+- Generate .ssts files for SIC.
+
+- Add feature for supporting different types of definitions (not just =).
+  We can add support for <, >, <=, >=, =.
+  
+- Add feature for allowing the use of the instruction itself (not just the
+  defined bit fields) when making definitions. Maybe just add it to the bit
+  fields section. 
+    
+- Add feature for allowing the use of indexing in definitions, for both 
+  the LHS and RHS. Example would be instruction[5:0] < 111011.
+  
+#####
+FIXES
+#####
+ 
+- Make tool generate the cache and mux files in case instructions are different bit-widths.
+
 - Fixes in SIC_generator.py
-- Need tool to generalize better (try another ISA)
+
+#################################
+FUTURE DIRECTION / ORGANIZATIONAL
+#################################
+
+- Need tool to generalize better (try another ISA).
+
+- Create case study sub-directories in git repo that are complete for a demo (and work).
+
+- Clean up and comment code.
+
+
+
