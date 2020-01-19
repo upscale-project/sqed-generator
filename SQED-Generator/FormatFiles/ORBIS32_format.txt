@@ -51,6 +51,13 @@ LW
 SW
 NOP
 
+# Need to fix this section, as the actual fields are:
+#
+# R = {opcode6, new_rD, new_rA, new_rB, instruction[10], opcode2, instruction[7:4], opcode4};
+# I = {opcode6, new_rD, new_rA, simm16};
+# LW = {opcode6, new_rD, new_rA, 2'b01, simm16[13:0]};
+# SW = {opcode6, 2'b01, instruction[23:21], new_rA, new_rB, instruction[10:0]};
+#
 _INSFIELDS
 R = funct7 rs2 rs1 funct3 rd opcode
 I = imm12 rs1 funct3 rd opcode
@@ -63,6 +70,13 @@ R
 opcode6 = 111000
 
 I
+# Here we see an example of an 'OR' type
+# of usage for the definitions. Hence, 
+# opcode6 could take on any of the defined values. 
+# The typical 'AND' type of usage would involve 
+# having multiple different definitions (names) 
+# with possibly more than one value (which would also
+# be the usage for an OR).
 opcode6 = 100111
 opcode6 = 101001
 opcode6 = 101100
@@ -263,6 +277,10 @@ opcode6 = 110111
 rA = 00000
 
 SW
+# I will be adding support to remove the need
+# for the usage of CONSTRAINT to manually input
+# definitions (no current support for <, >, etc...
+# or for instruction[i0:i1] indexing usage).
 CONSTRAINT (instruction[25:24] == 2'b00)
 CONSTRAINT (rB < 16)
 opcode6 = 110101
