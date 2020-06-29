@@ -9,7 +9,7 @@
 # Author: Mario J Srouji
 # Email: msrouji@stanford.edu
 
-SECTIONS = ISA QEDCONSTRAINTS REGISTERS MEMORY BITFIELDS INSTYPES INSFIELDS INSREQS R I LW SW NOP
+SECTIONS = ISA QEDCONSTRAINTS REGISTERS MEMORY BITFIELDS INSTYPES INSFIELDS INSREQS R I LW SW FP NOP
 
 _ISA
 num_registers = 32
@@ -49,21 +49,12 @@ R
 I
 LW
 SW
-NOP
 
-# Need to fix this section, as the actual fields are:
-#
-# R = {opcode6, new_rD, new_rA, new_rB, instruction[10], opcode2, instruction[7:4], opcode4};
-# I = {opcode6, new_rD, new_rA, simm16};
-# LW = {opcode6, new_rD, new_rA, 2'b01, simm16[13:0]};
-# SW = {opcode6, 2'b01, instruction[23:21], new_rA, new_rB, instruction[10:0]};
-#
 _INSFIELDS
-R = funct7 rs2 rs1 funct3 rd opcode
-I = imm12 rs1 funct3 rd opcode
-LW = imm12 rs1 funct3 rd opcode
-SW = imm7 rs2 rs1 funct3 imm5 opcode
-NOP = imm12 rs1 funct3 rd opcode
+R = opcode6 rD rA rB instruction[10 opcode2 instruction[7:4] opcode4
+I = opcode6 rD rA simm16
+LW = opcode6 rD rA 2'b01 simm16[13:0]
+SW = opcode6 2'b01 instruction[23:21] rA rB instruction[10:0]
 
 _INSREQS
 R
@@ -312,9 +303,6 @@ opcodeFP = 00000110
 FSUB
 opcodeFP = 00000001
 
-_NOP
-NOP
-CONSTRAINT (instruction == {8'b00010101, 24'd0})
 
 
 

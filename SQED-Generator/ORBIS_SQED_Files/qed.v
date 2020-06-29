@@ -8,75 +8,72 @@
 
 module qed (
 // Outputs
-qed_ifu_instruction,
 vld_out,
+qed_ifu_instruction,
 // Inputs
-clk,
-ifu_qed_instruction,
-rst,
 ena,
+ifu_qed_instruction,
+clk,
 exec_dup,
-stall_IF);
+stall_IF,
+rst);
 
-  input clk;
-  input [31:0] ifu_qed_instruction;
-  input rst;
   input ena;
+  input [31:0] ifu_qed_instruction;
+  input clk;
   input exec_dup;
   input stall_IF;
+  input rst;
 
-  output [31:0] qed_ifu_instruction;
   output vld_out;
-  wire [6:0] funct7;
-  wire [2:0] funct3;
-  wire [4:0] rd;
-  wire [4:0] rs1;
-  wire [4:0] rs2;
-  wire [6:0] opcode;
-  wire [4:0] shamt;
-  wire [11:0] imm12;
-  wire [6:0] imm7;
-  wire [4:0] imm5;
+  output [31:0] qed_ifu_instruction;
+  wire [1:0] opcode2;
+  wire [3:0] opcode4;
+  wire [5:0] opcode6;
+  wire [7:0] opcodeFP;
+  wire [15:0] simm16;
+  wire [3:0] opcode4EXT;
+  wire [4:0] rD;
+  wire [4:0] rA;
+  wire [4:0] rB;
 
-  wire IS_R;
   wire IS_I;
   wire IS_LW;
+  wire IS_R;
   wire IS_SW;
 
   wire [31:0] qed_instruction;
   wire [31:0] qic_qimux_instruction;
 
   qed_decoder dec (.ifu_qed_instruction(qic_qimux_instruction),
-                   .funct7(funct7),
-                   .funct3(funct3),
-                   .rd(rd),
-                   .rs1(rs1),
-                   .rs2(rs2),
-                   .opcode(opcode),
-                   .shamt(shamt),
-                   .imm12(imm12),
-                   .imm7(imm7),
-                   .imm5(imm5),
-                   .IS_R(IS_R),
+                   .opcode2(opcode2),
+                   .opcode4(opcode4),
+                   .opcode6(opcode6),
+                   .opcodeFP(opcodeFP),
+                   .simm16(simm16),
+                   .opcode4EXT(opcode4EXT),
+                   .rD(rD),
+                   .rA(rA),
+                   .rB(rB),
                    .IS_I(IS_I),
                    .IS_LW(IS_LW),
+                   .IS_R(IS_R),
                    .IS_SW(IS_SW));
 
   modify_instruction minst (.qed_instruction(qed_instruction),
                             .qic_qimux_instruction(qic_qimux_instruction),
-                            .funct7(funct7),
-                            .funct3(funct3),
-                            .rd(rd),
-                            .rs1(rs1),
-                            .rs2(rs2),
-                            .opcode(opcode),
-                            .shamt(shamt),
-                            .imm12(imm12),
-                            .imm7(imm7),
-                            .imm5(imm5),
-                            .IS_R(IS_R),
+                            .opcode2(opcode2),
+                            .opcode4(opcode4),
+                            .opcode6(opcode6),
+                            .opcodeFP(opcodeFP),
+                            .simm16(simm16),
+                            .opcode4EXT(opcode4EXT),
+                            .rD(rD),
+                            .rA(rA),
+                            .rB(rB),
                             .IS_I(IS_I),
                             .IS_LW(IS_LW),
+                            .IS_R(IS_R),
                             .IS_SW(IS_SW));
 
   qed_instruction_mux imux (.qed_ifu_instruction(qed_ifu_instruction),

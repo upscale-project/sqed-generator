@@ -164,5 +164,5 @@ def parser_display(f):
         print(info[key])
         print("\n")
 
-#parser_display("../FormatFiles/RV32M-ridecore_format.txt")
+#parser_display("../FormatFiles/ORBIS32_format.txt")
 

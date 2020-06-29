@@ -10,43 +10,43 @@ module modify_instruction (
 // Outputs
 qed_instruction,
 // Inputs
-qic_qimux_instruction,
-funct7,
-funct3,
-rd,
-rs1,
-rs2,
-opcode,
 shamt,
+IS_SW,
 imm12,
-imm7,
-imm5,
 IS_R,
+qic_qimux_instruction,
+rd,
+funct3,
+opcode,
+rs2,
+funct7,
 IS_I,
 IS_LW,
-IS_SW);
+imm5,
+rs1,
+imm7);
 
-  input [31:0] qic_qimux_instruction;
-  input [6:0] funct7;
-  input [2:0] funct3;
-  input [4:0] rd;
-  input [4:0] rs1;
-  input [4:0] rs2;
-  input [6:0] opcode;
   input [4:0] shamt;
+  input IS_SW;
   input [11:0] imm12;
-  input [6:0] imm7;
-  input [4:0] imm5;
   input IS_R;
+  input [31:0] qic_qimux_instruction;
+  input [4:0] rd;
+  input [2:0] funct3;
+  input [6:0] opcode;
+  input [4:0] rs2;
+  input [6:0] funct7;
   input IS_I;
   input IS_LW;
-  input IS_SW;
+  input [4:0] imm5;
+  input [4:0] rs1;
+  input [6:0] imm7;
 
   output reg [31:0] qed_instruction;
 
-  wire [31:0] INS_R;
   wire [31:0] INS_I;
   wire [31:0] INS_LW;
+  wire [31:0] INS_R;
   wire [31:0] INS_SW;
   wire [31:0] INS_CONSTRAINT;
 
@@ -62,11 +62,11 @@ IS_SW);
   assign NEW_imm12 = {2'b01, imm12[9:0]};
   assign NEW_imm7 = {2'b01, imm7[4:0]};
 
-  assign INS_R = {funct7, NEW_rs2, NEW_rs1, funct3, NEW_rd, opcode};
   assign INS_I = {imm12, NEW_rs1, funct3, NEW_rd, opcode};
   assign INS_LW = {NEW_imm12, NEW_rs1, funct3, NEW_rd, opcode};
+  assign INS_R = {funct7, NEW_rs2, NEW_rs1, funct3, NEW_rd, opcode};
   assign INS_SW = {NEW_imm7, NEW_rs2, NEW_rs1, funct3, imm5, opcode};
 
-  assign qed_instruction = IS_R ? INS_R : (IS_I ? INS_I : (IS_LW ? INS_LW : (IS_SW ? INS_SW : qic_qimux_instruction)));
+  assign qed_instruction = IS_I ? INS_I : (IS_LW ? INS_LW : (IS_R ? INS_R : (IS_SW ? INS_SW : qic_qimux_instruction)));
 
 endmodule
