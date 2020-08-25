@@ -35,7 +35,22 @@ generated (2.).
 Either of the above variants should result in a generic QED module
 that is easily customizable. Here, we chose to go with option (2.).
 
-See the README.txt file in /SQED-Generator directory.
+See the README.txt file in ./SQED-Generator directory.
+
+-------------------------------
+Documentation and publications:
+-------------------------------
+
+The document './Auto-SQED.pdf' provides a detailed technical
+description of our generator approach.
+
+A related paper appeared at ICCAD 2019:
+
+F. Lonsing, K. Ganesan, M. Mann, S. Nuthakki, E. Singh, M. Srouji,
+Y. Yang, S. Mitra, and C. Barrett: Unlocking the Power of Formal
+Hardware Verification with CoSA and Symbolic QED. Invited paper. In
+Proc. 2019 International Conference on Computer Aided Design
+(ICCAD). IEEE, 2019.
 
 ---------------------------
 Organization of repository:
