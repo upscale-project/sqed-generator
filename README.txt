@@ -2,13 +2,13 @@
 License
 -------
 
-See LICENSE-GOV.txt and LICENSE-ACADEMIC.txt in the /SQED-Generator directory.
+See LICENSE-GOV.txt and LICENSE-ACADEMIC.txt in the ./SQED-Generator directory.
 
 -------------------
 General information
 -------------------
 
-This repository contains material related to our planned generic SQED
+This repository contains material related to our generic SQED
 module.
 
 Based on discussions, we had envisioned two possible ways to implement a
@@ -51,24 +51,15 @@ Directory 'custom-sqed-modules':
 A collection of QED modules (Verilog sources) that we already
 have. These modules are custom for particular designs.
 
-Directory 'generic-sqed-modules':
-
-Verilog sources of the generic QED module will be put here.
-
 Directory 'doc':
 
 A collection of ISA specification documents that we will need to
-formulate the generic QED module
+formulate the textual description files for our generator workflow.
 
 Directory 'isa-constraints':
 
 Instruction constraints files of the custom QED modules we have
 collected.
-
-Directory 'isa-input-templates':
-
-Structured specification file format (only relevant if we go for
-variant 2. above).
 
 Directory 'materials':
 
